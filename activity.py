@@ -26,6 +26,7 @@ def get_github_activity(args) -> None:
         return
     except TimeoutError:
         print('Request Timed out')
+        return
     else:
         decoded_body = body.decode("utf-8")
         events = json.loads(decoded_body)
@@ -76,8 +77,9 @@ def format_event(event) -> str:
         return event_type
 
 def display_events(events) -> None:
-    if events is None:
+    if len(events) == 0:
         print('No events to print')
+        return
 
     for event in events:
         print(f"{format_event(event)}")
