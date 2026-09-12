@@ -4,8 +4,9 @@ import argparse
 from urllib.request import urlopen, Request
 import json 
 from urllib.error import HTTPError, URLError
+from typing import Any
 
-def get_github_activity(args) -> None:
+def get_github_activity(args: argparse.Namespace) -> None:
     username = args.username
     url = f"https://api.github.com/users/{username}/events"
     headers = {"Authorization": f"Bearer {API_KEY}"}
@@ -32,7 +33,7 @@ def get_github_activity(args) -> None:
         events = json.loads(decoded_body)
         display_events(events)
 
-def format_event(event) -> str:
+def format_event(event: dict[str,Any]) -> str:
     event_type = event["type"]
     actor = event["actor"]["login"]
     repo = event["repo"]["name"]
@@ -76,13 +77,13 @@ def format_event(event) -> str:
     else:
         return event_type
 
-def display_events(events) -> None:
-    if len(events) == 0:
+def display_events(events: list[dict[str,Any]]) -> None:
+    if not events:
         print('No events to print')
         return
 
     for event in events:
-        print(f"{format_event(event)}")
+        print(format_event(event))
 
 
 def main() -> None:
